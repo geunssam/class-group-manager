@@ -61,52 +61,53 @@
         </header>
 
         <!-- 타이머 설정 섹션 -->
-        <section class="bg-white rounded-xl shadow-sm p-4 mb-4">
-            <div class="flex items-center justify-center gap-6 flex-wrap">
+        <section class="bg-white rounded-xl shadow-sm p-3 mb-4">
+            <div class="flex flex-col items-center gap-2">
+                <!-- 타이머 모드 선택 -->
                 <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-500">⏱️</span>
-                    <select id="timerMode" class="px-2 py-1 border border-gray-300 rounded-lg text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <span class="text-xs text-gray-500">⏱️</span>
+                    <select id="timerMode" class="px-2 py-1 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="global">전체 타이머</option>
                         <option value="perGroup">모둠별 타이머</option>
                     </select>
                 </div>
                 <!-- 전체 타이머일 때만 표시 -->
-                <div id="globalTimerSection" class="flex items-center gap-6 flex-wrap">
-                    <div class="text-4xl font-mono font-bold text-gray-800" id="timerDisplay">05:00</div>
-                    <div class="flex items-center gap-2">
-                        <button class="timer-preset px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm transition" data-time="60">1분</button>
-                        <button class="timer-preset px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm transition" data-time="180">3분</button>
-                        <button class="timer-preset px-3 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-sm transition" data-time="300">5분</button>
-                        <button class="timer-preset px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm transition" data-time="600">10분</button>
+                <div id="globalTimerSection" class="flex flex-col items-center gap-2 w-full">
+                    <div class="text-4xl font-mono font-bold text-gray-800 text-center" id="timerDisplay">05:00</div>
+                    <div class="flex items-center justify-center gap-1 flex-wrap">
+                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="60">1분</button>
+                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="180">3분</button>
+                        <button class="timer-preset px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-xs transition" data-time="300">5분</button>
+                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="600">10분</button>
                         <input type="number" id="customTime" placeholder="초" min="10" max="3600"
-                               class="w-16 px-2 py-1.5 border border-gray-300 rounded-lg text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                               class="w-12 px-1 py-1 border border-gray-300 rounded text-center text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div class="flex items-center gap-2">
-                        <button id="btnTimerStart" class="px-5 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-sm transition">
+                        <button id="btnTimerStart" class="px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-sm transition text-sm">
                             시작
                         </button>
-                        <button id="btnTimerPause" class="px-5 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-lg shadow-sm transition hidden">
+                        <button id="btnTimerPause" class="px-4 py-1.5 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded-lg shadow-sm transition text-sm hidden">
                             일시정지
                         </button>
-                        <button id="btnTimerReset" class="px-5 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-lg shadow-sm transition">
+                        <button id="btnTimerReset" class="px-4 py-1.5 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-lg shadow-sm transition text-sm">
                             리셋
                         </button>
                     </div>
                 </div>
                 <!-- 모둠별 타이머일 때만 표시 -->
-                <div id="perGroupTimerSection" class="hidden flex items-center gap-4 flex-wrap">
-                    <div class="flex items-center gap-2">
-                        <button class="timer-preset px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm transition" data-time="60">1분</button>
-                        <button class="timer-preset px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm transition" data-time="180">3분</button>
-                        <button class="timer-preset px-3 py-1.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg text-sm transition" data-time="300">5분</button>
-                        <button class="timer-preset px-3 py-1.5 bg-gray-200 hover:bg-gray-300 rounded-lg text-sm transition" data-time="600">10분</button>
+                <div id="perGroupTimerSection" class="hidden flex flex-col items-center gap-2 w-full">
+                    <div class="flex items-center justify-center gap-1 flex-wrap">
+                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="60">1분</button>
+                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="180">3분</button>
+                        <button class="timer-preset px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-xs transition" data-time="300">5분</button>
+                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="600">10분</button>
                     </div>
-                    <span class="text-gray-500 text-sm">각 모둠 카드에서 타이머 조작</span>
+                    <span class="text-gray-500 text-xs">각 모둠 카드에서 타이머 조작</span>
                     <div class="flex items-center gap-2">
-                        <button id="btnStartAllTimers" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-sm transition text-sm">
+                        <button id="btnStartAllTimers" class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg shadow-sm transition text-xs">
                             전체 시작
                         </button>
-                        <button id="btnResetAllTimers" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-lg shadow-sm transition text-sm">
+                        <button id="btnResetAllTimers" class="px-3 py-1.5 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded-lg shadow-sm transition text-xs">
                             전체 리셋
                         </button>
                     </div>
@@ -115,23 +116,27 @@
         </section>
 
         <!-- 모둠 설정 -->
-        <section class="bg-white rounded-xl shadow-sm p-4 mb-4">
-            <div class="flex flex-wrap items-center justify-center gap-4">
-                <div class="flex items-center gap-2">
-                    <label class="text-gray-700 font-medium">모둠당</label>
+        <section class="bg-white rounded-xl shadow-sm p-3 mb-4">
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <div class="flex items-center gap-1">
+                    <label class="text-gray-700 text-sm">모둠당</label>
+                    <button id="btnGroupSizeMinus" class="w-7 h-7 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 font-bold text-sm">−</button>
                     <input type="number" id="groupSize" value="4" min="2" max="10"
-                           class="w-14 px-2 py-1.5 border border-gray-300 rounded-lg text-center text-lg font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <span class="text-gray-700">명씩</span>
+                           class="w-10 px-1 py-1 border border-gray-300 rounded text-center text-base font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button id="btnGroupSizePlus" class="w-7 h-7 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 font-bold text-sm">+</button>
+                    <span class="text-gray-700 text-sm">명</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1">
+                    <button id="btnGroupCountMinus" class="w-7 h-7 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 font-bold text-sm">−</button>
                     <input type="number" id="groupCount" value="6" min="1" max="15"
-                           class="w-14 px-2 py-1.5 border border-gray-300 rounded-lg text-center text-lg font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <span class="text-gray-700">모둠</span>
+                           class="w-10 px-1 py-1 border border-gray-300 rounded text-center text-base font-bold focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button id="btnGroupCountPlus" class="w-7 h-7 bg-gray-200 hover:bg-gray-300 rounded text-gray-700 font-bold text-sm">+</button>
+                    <span class="text-gray-700 text-sm">모둠</span>
                 </div>
-                <button id="btnPick" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition transform hover:scale-105">
+                <button id="btnPick" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md hover:shadow-lg transition text-sm">
                     🎲 모둠 뽑기
                 </button>
-                <span id="studentInfo" class="text-gray-500 text-sm"></span>
+                <span id="studentInfo" class="text-gray-500 text-xs"></span>
             </div>
         </section>
 

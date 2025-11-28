@@ -1133,3 +1133,37 @@ const app = new App();
 // 입력 변경 시 학생 정보 업데이트
 document.getElementById('groupSize').addEventListener('change', () => app.updateStudentInfo());
 document.getElementById('groupCount').addEventListener('change', () => app.updateStudentInfo());
+
+// +/- 버튼 이벤트
+document.getElementById('btnGroupSizeMinus').addEventListener('click', () => {
+    const input = document.getElementById('groupSize');
+    const val = parseInt(input.value) - 1;
+    if (val >= parseInt(input.min)) {
+        input.value = val;
+        app.updateStudentInfo();
+    }
+});
+document.getElementById('btnGroupSizePlus').addEventListener('click', () => {
+    const input = document.getElementById('groupSize');
+    const val = parseInt(input.value) + 1;
+    if (val <= parseInt(input.max)) {
+        input.value = val;
+        app.updateStudentInfo();
+    }
+});
+document.getElementById('btnGroupCountMinus').addEventListener('click', () => {
+    const input = document.getElementById('groupCount');
+    const val = parseInt(input.value) - 1;
+    if (val >= parseInt(input.min)) {
+        input.value = val;
+        app.updateStudentInfo();
+    }
+});
+document.getElementById('btnGroupCountPlus').addEventListener('click', () => {
+    const input = document.getElementById('groupCount');
+    const val = parseInt(input.value) + 1;
+    if (val <= parseInt(input.max)) {
+        input.value = val;
+        app.updateStudentInfo();
+    }
+});
