@@ -3,8 +3,8 @@
  * 오프라인 지원 및 캐싱 전략
  */
 
-const CACHE_NAME = 'class-group-manager-v3';
-const STATIC_CACHE = 'static-v3';
+const CACHE_NAME = 'class-group-manager-v4';
+const STATIC_CACHE = 'static-v4';
 
 // 캐시할 정적 리소스
 const STATIC_ASSETS = [

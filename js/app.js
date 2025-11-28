@@ -279,23 +279,41 @@ class App {
             return;
         }
 
-        container.innerHTML = classes.map(cls => `
-            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition"
-                 onclick="app.selectClass('${cls.id}')">
-                <span class="font-medium">${cls.name}</span>
-                <span class="text-gray-500 text-sm">${cls.students.length}명</span>
-            </div>
-        `).join('');
+        container.innerHTML = classes.map(cls => {
+            const isSelected = cls.id === this.currentClassId;
+            return `
+                <div class="class-item flex items-center justify-between p-3 rounded-lg cursor-pointer transition ${isSelected ? 'bg-blue-100 border-2 border-blue-500' : 'bg-gray-50 hover:bg-gray-100'}"
+                     data-class-id="${cls.id}"
+                     onclick="app.selectClass('${cls.id}')">
+                    <span class="font-medium ${isSelected ? 'text-blue-700' : ''}">${cls.name}</span>
+                    <span class="${isSelected ? 'text-blue-600' : 'text-gray-500'} text-sm">${cls.students.length}명</span>
+                </div>
+            `;
+        }).join('');
     }
 
     selectClass(id) {
         this.currentClassId = id;
         const cls = store.getClassById(id);
         if (cls) {
+            // 입력 필드 업데이트
             document.getElementById('className').value = cls.name;
             document.getElementById('studentList').value = cls.students.join('\n');
-            document.getElementById('classSelect').value = id;
-            this.updateStudentInfo();
+
+            // 헤더 select 업데이트
+            const classSelect = document.getElementById('classSelect');
+            if (classSelect) {
+                classSelect.value = id;
+            }
+
+            // 학급 목록 하이라이트 업데이트
+            this.renderClassList();
+
+            // 제외 섹션 업데이트
+            this.excludedStudents = [];
+            this.renderExcludeSection();
+
+            this.showToast(`'${cls.name}' 선택됨`);
         }
     }
 
