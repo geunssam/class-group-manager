@@ -112,25 +112,15 @@
                     <button id="btnGroupCountPlus" class="w-6 h-6 bg-blue-50 hover:bg-blue-100 rounded text-blue-500 font-bold text-sm">+</button>
                     <span class="text-gray-600 text-sm">모둠</span>
                 </div>
+                <button id="btnExclude" class="px-3 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 font-medium rounded-lg transition text-sm hidden">
+                    🚫 결석 <span id="excludeCount" class="font-bold"></span>
+                </button>
                 <button id="btnPick" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition text-sm">
                     🎲 뽑기!
                 </button>
                 <button id="btnReset" class="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-600 font-medium rounded-lg transition text-sm">
                     ↺ 초기화
                 </button>
-            </div>
-            <!-- 학생 제외 토글 -->
-            <div id="excludeSection" class="hidden mt-3 pt-3 border-t border-gray-100">
-                <div class="flex items-center justify-between mb-2">
-                    <button id="btnToggleExclude" class="text-sm text-gray-600 hover:text-blue-600 flex items-center gap-1">
-                        <span id="excludeArrow">▶</span> 결석/조퇴 학생 제외
-                        <span id="excludeCount" class="text-xs text-gray-400 ml-1"></span>
-                    </button>
-                    <button id="btnSelectAll" class="text-xs text-blue-500 hover:text-blue-700 hidden">전체선택</button>
-                </div>
-                <div id="studentCheckList" class="hidden grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1 max-h-32 overflow-y-auto">
-                    <!-- 학생 체크박스가 여기에 동적으로 생성됨 -->
-                </div>
             </div>
         </section>
 
@@ -209,6 +199,36 @@
                     </button>
                     <button id="btnCancelPick" class="w-full px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl transition">
                         취소
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 결석/조퇴 학생 제외 모달 -->
+    <div id="excludeModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[80vh] overflow-hidden">
+            <div class="p-4 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-bold text-gray-800">🚫 결석/조퇴 학생 제외</h2>
+                    <button id="btnCloseExclude" class="p-2 hover:bg-gray-100 rounded-lg transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">제외할 학생을 탭하세요 (탭하면 제외됨)</p>
+            </div>
+            <div class="p-4 overflow-y-auto max-h-[50vh]">
+                <div id="studentCheckList" class="grid grid-cols-3 gap-2">
+                    <!-- 학생 목록이 여기에 동적으로 생성됨 -->
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-200 bg-gray-50">
+                <div class="flex justify-between items-center">
+                    <span id="excludeSummary" class="text-sm text-gray-600"></span>
+                    <button id="btnConfirmExclude" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                        확인
                     </button>
                 </div>
             </div>

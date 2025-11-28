@@ -83,9 +83,13 @@ class App {
         document.getElementById('btnSaveClass').addEventListener('click', () => this.saveClass());
         document.getElementById('btnDeleteClass').addEventListener('click', () => this.deleteCurrentClass());
 
-        // 학생 제외 기능
-        document.getElementById('btnToggleExclude').addEventListener('click', () => this.toggleExcludeList());
-        document.getElementById('btnSelectAll').addEventListener('click', () => this.selectAllStudents());
+        // 학생 제외 모달
+        document.getElementById('btnExclude').addEventListener('click', () => this.openExcludeModal());
+        document.getElementById('btnCloseExclude').addEventListener('click', () => this.closeExcludeModal());
+        document.getElementById('btnConfirmExclude').addEventListener('click', () => this.closeExcludeModal());
+        document.getElementById('excludeModal').addEventListener('click', (e) => {
+            if (e.target.id === 'excludeModal') this.closeExcludeModal();
+        });
 
         // CSV 파일 가져오기
         document.getElementById('csvFileInput').addEventListener('change', (e) => this.importCSV(e));
@@ -282,11 +286,11 @@ class App {
         container.innerHTML = classes.map(cls => {
             const isSelected = cls.id === this.currentClassId;
             return `
-                <div class="class-item flex items-center justify-between p-3 rounded-lg cursor-pointer transition ${isSelected ? 'bg-blue-100 border-2 border-blue-500' : 'bg-gray-50 hover:bg-gray-100'}"
+                <div class="class-item flex items-center justify-between p-3 rounded-lg cursor-pointer transition ${isSelected ? 'bg-sky-200 border-2 border-sky-500 shadow-md' : 'bg-gray-50 hover:bg-gray-100 border-2 border-transparent'}"
                      data-class-id="${cls.id}"
                      onclick="app.selectClass('${cls.id}')">
-                    <span class="font-medium ${isSelected ? 'text-blue-700' : ''}">${cls.name}</span>
-                    <span class="${isSelected ? 'text-blue-600' : 'text-gray-500'} text-sm">${cls.students.length}명</span>
+                    <span class="font-medium ${isSelected ? 'text-sky-800' : 'text-gray-700'}">${cls.name}</span>
+                    <span class="${isSelected ? 'text-sky-700 font-bold' : 'text-gray-500'} text-sm">${cls.students.length}명</span>
                 </div>
             `;
         }).join('');
@@ -474,109 +478,90 @@ class App {
     // === 학생 제외 기능 ===
 
     renderExcludeSection() {
-        const excludeSection = document.getElementById('excludeSection');
-        const studentCheckList = document.getElementById('studentCheckList');
+        const btnExclude = document.getElementById('btnExclude');
         const excludeCount = document.getElementById('excludeCount');
 
         if (!this.currentClassId) {
-            excludeSection.classList.add('hidden');
+            btnExclude.classList.add('hidden');
             return;
         }
 
         const cls = store.getClassById(this.currentClassId);
         if (!cls || cls.students.length === 0) {
-            excludeSection.classList.add('hidden');
+            btnExclude.classList.add('hidden');
             return;
         }
 
-        excludeSection.classList.remove('hidden');
+        // 결석 버튼 표시
+        btnExclude.classList.remove('hidden');
+        this.updateExcludeButton();
+    }
 
-        // 학생 체크박스 렌더링
+    updateExcludeButton() {
+        const excludeCount = document.getElementById('excludeCount');
+        if (this.excludedStudents.length > 0) {
+            excludeCount.textContent = `(${this.excludedStudents.length}명)`;
+        } else {
+            excludeCount.textContent = '';
+        }
+    }
+
+    openExcludeModal() {
+        if (!this.currentClassId) {
+            this.showToast('먼저 학급을 선택해주세요');
+            return;
+        }
+
+        const cls = store.getClassById(this.currentClassId);
+        if (!cls) return;
+
+        const studentCheckList = document.getElementById('studentCheckList');
+
+        // 학생 목록 렌더링 (탭하면 선택/해제)
         studentCheckList.innerHTML = cls.students.map(name => {
             const isExcluded = this.excludedStudents.includes(name);
             return `
-                <label class="flex items-center gap-1 p-1 rounded cursor-pointer hover:bg-gray-50 ${isExcluded ? 'opacity-50' : ''}">
-                    <input type="checkbox" class="student-checkbox w-3 h-3" data-name="${name}" ${isExcluded ? '' : 'checked'}>
-                    <span class="text-xs truncate">${name}</span>
-                </label>
+                <div class="student-item p-2 rounded-lg cursor-pointer transition text-center text-sm ${isExcluded ? 'bg-red-100 text-red-700 border-2 border-red-300' : 'bg-sky-100 text-sky-800 border-2 border-sky-300'}"
+                     data-name="${name}"
+                     onclick="app.toggleStudentExclude('${name}')">
+                    ${name}
+                </div>
             `;
         }).join('');
 
-        // 체크박스 이벤트 바인딩
-        studentCheckList.querySelectorAll('.student-checkbox').forEach(cb => {
-            cb.addEventListener('change', (e) => {
-                const name = e.target.dataset.name;
-                if (e.target.checked) {
-                    this.excludedStudents = this.excludedStudents.filter(n => n !== name);
-                    e.target.parentElement.classList.remove('opacity-50');
-                } else {
-                    if (!this.excludedStudents.includes(name)) {
-                        this.excludedStudents.push(name);
-                    }
-                    e.target.parentElement.classList.add('opacity-50');
-                }
-                this.updateExcludeCount();
-            });
-        });
-
-        this.updateExcludeCount();
+        this.updateExcludeSummary(cls);
+        document.getElementById('excludeModal').classList.remove('hidden');
     }
 
-    updateExcludeCount() {
-        const excludeCount = document.getElementById('excludeCount');
-        const cls = store.getClassById(this.currentClassId);
-        if (cls) {
-            const participating = cls.students.length - this.excludedStudents.length;
-            if (this.excludedStudents.length > 0) {
-                excludeCount.textContent = `(${participating}명 참여, ${this.excludedStudents.length}명 제외)`;
-                excludeCount.classList.remove('text-gray-400');
-                excludeCount.classList.add('text-red-500');
-            } else {
-                excludeCount.textContent = `(${participating}명)`;
-                excludeCount.classList.remove('text-red-500');
-                excludeCount.classList.add('text-gray-400');
-            }
-        }
+    closeExcludeModal() {
+        document.getElementById('excludeModal').classList.add('hidden');
+        this.updateExcludeButton();
     }
 
-    toggleExcludeList() {
-        const studentCheckList = document.getElementById('studentCheckList');
-        const excludeArrow = document.getElementById('excludeArrow');
-        const btnSelectAll = document.getElementById('btnSelectAll');
+    toggleStudentExclude(name) {
+        const studentItem = document.querySelector(`.student-item[data-name="${name}"]`);
+        if (!studentItem) return;
 
-        if (studentCheckList.classList.contains('hidden')) {
-            studentCheckList.classList.remove('hidden');
-            btnSelectAll.classList.remove('hidden');
-            excludeArrow.textContent = '▼';
+        if (this.excludedStudents.includes(name)) {
+            // 제외 해제 (참여로 변경)
+            this.excludedStudents = this.excludedStudents.filter(n => n !== name);
+            studentItem.classList.remove('bg-red-100', 'text-red-700', 'border-red-300');
+            studentItem.classList.add('bg-sky-100', 'text-sky-800', 'border-sky-300');
         } else {
-            studentCheckList.classList.add('hidden');
-            btnSelectAll.classList.add('hidden');
-            excludeArrow.textContent = '▶';
+            // 제외 추가
+            this.excludedStudents.push(name);
+            studentItem.classList.remove('bg-sky-100', 'text-sky-800', 'border-sky-300');
+            studentItem.classList.add('bg-red-100', 'text-red-700', 'border-red-300');
         }
+
+        const cls = store.getClassById(this.currentClassId);
+        this.updateExcludeSummary(cls);
     }
 
-    selectAllStudents() {
-        const checkboxes = document.querySelectorAll('.student-checkbox');
-        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-
-        checkboxes.forEach(cb => {
-            cb.checked = !allChecked;
-            const name = cb.dataset.name;
-            if (!allChecked) {
-                // 전체 선택
-                this.excludedStudents = this.excludedStudents.filter(n => n !== name);
-                cb.parentElement.classList.remove('opacity-50');
-            } else {
-                // 전체 해제
-                if (!this.excludedStudents.includes(name)) {
-                    this.excludedStudents.push(name);
-                }
-                cb.parentElement.classList.add('opacity-50');
-            }
-        });
-
-        document.getElementById('btnSelectAll').textContent = allChecked ? '전체선택' : '전체해제';
-        this.updateExcludeCount();
+    updateExcludeSummary(cls) {
+        const summary = document.getElementById('excludeSummary');
+        const participating = cls.students.length - this.excludedStudents.length;
+        summary.textContent = `참여 ${participating}명 / 제외 ${this.excludedStudents.length}명`;
     }
 
     // === 모둠 뽑기 ===
