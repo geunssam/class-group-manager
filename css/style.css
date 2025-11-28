@@ -1,0 +1,313 @@
+/* Class Group Manager - Custom Styles */
+
+/* 쿠키 애니메이션 */
+@keyframes cookieBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+}
+
+.cookie-bounce {
+    animation: cookieBounce 0.3s ease-in-out;
+}
+
+/* 타이머 경고 애니메이션 */
+@keyframes timerAlert {
+    0%, 100% { background-color: #fef2f2; }
+    50% { background-color: #fee2e2; }
+}
+
+.timer-warning {
+    animation: timerAlert 1s ease-in-out infinite;
+}
+
+/* 모둠 카드 호버 효과 */
+.group-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.group-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* 그리드 아이템 높이 통일 */
+#groupsContainer {
+    align-items: stretch;
+}
+
+#groupsContainer > div {
+    height: 100%;
+}
+
+/* 쿠키 버튼 */
+.cookie-btn {
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    transition: all 0.15s ease;
+}
+
+.cookie-btn:active {
+    transform: scale(0.95);
+}
+
+/* 타이머 프리셋 활성 상태 */
+.timer-preset.active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* 모달 애니메이션 */
+.modal-enter {
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 토스트 표시 */
+#toast.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 모둠 카드 색상 */
+.group-color-1 { border-left: 4px solid #3b82f6; }
+.group-color-2 { border-left: 4px solid #10b981; }
+.group-color-3 { border-left: 4px solid #f59e0b; }
+.group-color-4 { border-left: 4px solid #ef4444; }
+.group-color-5 { border-left: 4px solid #8b5cf6; }
+.group-color-6 { border-left: 4px solid #ec4899; }
+.group-color-7 { border-left: 4px solid #06b6d4; }
+.group-color-8 { border-left: 4px solid #84cc16; }
+
+/* 반응형 - 대화면 최적화 */
+@media (min-width: 1024px) {
+    .group-card {
+        min-height: 200px;
+    }
+
+    .group-card .student-name {
+        font-size: 1.25rem;
+        line-height: 1.8;
+    }
+
+    .group-card h3 {
+        font-size: 1.5rem;
+    }
+
+    #timerDisplay {
+        font-size: 5rem;
+    }
+
+    .cookie-count {
+        font-size: 1.5rem;
+    }
+
+    .cookie-btn {
+        font-size: 1.5rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+/* 초대형 화면 (프로젝터/TV) */
+@media (min-width: 1440px) {
+    .group-card {
+        min-height: 250px;
+        padding: 1.5rem;
+    }
+
+    .group-card .student-name {
+        font-size: 1.5rem;
+        line-height: 2;
+    }
+
+    .group-card h3 {
+        font-size: 1.75rem;
+    }
+
+    #timerDisplay {
+        font-size: 6rem;
+    }
+
+    .cookie-count {
+        font-size: 2rem;
+    }
+
+    .cookie-btn {
+        font-size: 1.75rem;
+        padding: 0.75rem 1.25rem;
+        min-width: 60px;
+        min-height: 60px;
+    }
+
+    /* 헤더 */
+    header h1 {
+        font-size: 2rem;
+    }
+
+    /* 버튼 크기 증가 */
+    #btnPick {
+        font-size: 1.25rem;
+        padding: 0.75rem 2rem;
+    }
+
+    .timer-preset {
+        font-size: 1rem;
+        padding: 0.75rem 1.25rem;
+    }
+}
+
+/* 터치 친화적 버튼 크기 */
+@media (pointer: coarse) {
+    .cookie-btn {
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    button {
+        min-height: 44px;
+    }
+}
+
+/* 뽑기 애니메이션 - 슬롯머신 스타일 */
+@keyframes slotSpin {
+    0% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(-20px); opacity: 0; }
+    51% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes cardReveal {
+    0% {
+        transform: scale(0.8) rotateY(90deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05) rotateY(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1) rotateY(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes nameReveal {
+    0% {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes shuffleFlash {
+    0%, 100% { background-color: white; }
+    50% { background-color: #fef3c7; }
+}
+
+.slot-spin {
+    animation: slotSpin 0.1s ease-in-out;
+}
+
+.card-reveal {
+    animation: cardReveal 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.name-reveal {
+    animation: nameReveal 0.3s ease-out forwards;
+    opacity: 0;
+}
+
+.shuffle-flash {
+    animation: shuffleFlash 0.2s ease-in-out;
+}
+
+/* 뽑기 오버레이 */
+#pickingOverlay {
+    backdrop-filter: blur(4px);
+}
+
+.picking-text {
+    animation: pulse 0.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* 드럼롤 효과 */
+.drum-roll {
+    animation: drumRoll 0.05s linear infinite;
+}
+
+@keyframes drumRoll {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+    100% { transform: translateY(0); }
+}
+
+/* 모둠별 타이머 대화면 스타일 */
+@media (min-width: 1024px) {
+    .group-timer {
+        padding: 0.75rem;
+    }
+
+    .group-timer span {
+        font-size: 1.5rem;
+    }
+
+    .group-timer button {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+@media (min-width: 1440px) {
+    .group-timer {
+        padding: 1rem;
+    }
+
+    .group-timer span {
+        font-size: 2rem;
+    }
+
+    .group-timer button {
+        font-size: 1rem;
+        padding: 0.625rem 1rem;
+    }
+}
+
+/* 고대비 모드 지원 */
+@media (prefers-contrast: high) {
+    .group-card {
+        border: 2px solid #000;
+    }
+
+    .timer-preset.active {
+        background-color: #1d4ed8;
+        border: 2px solid #000;
+    }
+}
+
+/* 부드러운 전환 효과 */
+.group-card,
+.timer-preset,
+button {
+    transition: all 0.2s ease;
+}
