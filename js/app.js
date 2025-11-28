@@ -1134,36 +1134,44 @@ const app = new App();
 document.getElementById('groupSize').addEventListener('change', () => app.updateStudentInfo());
 document.getElementById('groupCount').addEventListener('change', () => app.updateStudentInfo());
 
-// +/- 버튼 이벤트
-document.getElementById('btnGroupSizeMinus').addEventListener('click', () => {
-    const input = document.getElementById('groupSize');
-    const val = parseInt(input.value) - 1;
-    if (val >= parseInt(input.min)) {
-        input.value = val;
-        app.updateStudentInfo();
-    }
-});
-document.getElementById('btnGroupSizePlus').addEventListener('click', () => {
-    const input = document.getElementById('groupSize');
-    const val = parseInt(input.value) + 1;
-    if (val <= parseInt(input.max)) {
-        input.value = val;
-        app.updateStudentInfo();
-    }
-});
-document.getElementById('btnGroupCountMinus').addEventListener('click', () => {
-    const input = document.getElementById('groupCount');
-    const val = parseInt(input.value) - 1;
-    if (val >= parseInt(input.min)) {
-        input.value = val;
-        app.updateStudentInfo();
-    }
-});
-document.getElementById('btnGroupCountPlus').addEventListener('click', () => {
-    const input = document.getElementById('groupCount');
-    const val = parseInt(input.value) + 1;
-    if (val <= parseInt(input.max)) {
-        input.value = val;
-        app.updateStudentInfo();
-    }
+// +/- 버튼 이벤트 (DOM 로드 후 바인딩)
+document.addEventListener('DOMContentLoaded', () => {
+    const groupSizeInput = document.getElementById('groupSize');
+    const groupCountInput = document.getElementById('groupCount');
+
+    document.getElementById('btnGroupSizeMinus').addEventListener('click', (e) => {
+        e.preventDefault();
+        const val = parseInt(groupSizeInput.value) - 1;
+        if (val >= parseInt(groupSizeInput.min)) {
+            groupSizeInput.value = val;
+            app.updateStudentInfo();
+        }
+    });
+
+    document.getElementById('btnGroupSizePlus').addEventListener('click', (e) => {
+        e.preventDefault();
+        const val = parseInt(groupSizeInput.value) + 1;
+        if (val <= parseInt(groupSizeInput.max)) {
+            groupSizeInput.value = val;
+            app.updateStudentInfo();
+        }
+    });
+
+    document.getElementById('btnGroupCountMinus').addEventListener('click', (e) => {
+        e.preventDefault();
+        const val = parseInt(groupCountInput.value) - 1;
+        if (val >= parseInt(groupCountInput.min)) {
+            groupCountInput.value = val;
+            app.updateStudentInfo();
+        }
+    });
+
+    document.getElementById('btnGroupCountPlus').addEventListener('click', (e) => {
+        e.preventDefault();
+        const val = parseInt(groupCountInput.value) + 1;
+        if (val <= parseInt(groupCountInput.max)) {
+            groupCountInput.value = val;
+            app.updateStudentInfo();
+        }
+    });
 });
