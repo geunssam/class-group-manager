@@ -39,78 +39,54 @@
 <body class="bg-gray-100 min-h-screen">
     <div id="app" class="container mx-auto px-4 py-6 max-w-6xl">
 
-        <!-- 헤더 -->
-        <header class="bg-white rounded-xl shadow-sm p-4 mb-6">
-            <div class="flex items-center justify-between flex-wrap gap-4">
-                <h1 class="text-2xl font-bold text-gray-800">모둠 뽑기</h1>
-                <div class="flex items-center gap-3">
-                    <select id="classSelect" class="px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">학급을 선택하세요</option>
-                    </select>
-                    <button id="btnEditClass" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 transition">
-                        명단 편집
-                    </button>
-                    <button id="btnSettings" class="p-2 bg-gray-200 hover:bg-gray-300 rounded-lg text-gray-700 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                    </button>
+        <!-- 타이머 + 컨트롤 섹션 (컴팩트) -->
+        <section class="bg-white rounded-xl shadow-sm p-2 mb-3">
+            <!-- 전체 타이머 -->
+            <div id="globalTimerSection" class="flex items-center justify-center gap-2 flex-wrap">
+                <div class="text-3xl font-mono font-bold text-gray-800" id="timerDisplay">05:00</div>
+                <div class="flex items-center gap-1">
+                    <button class="timer-preset px-2 py-0.5 bg-gray-200 hover:bg-gray-300 rounded text-xs" data-time="60">1분</button>
+                    <button class="timer-preset px-2 py-0.5 bg-gray-200 hover:bg-gray-300 rounded text-xs" data-time="180">3분</button>
+                    <button class="timer-preset px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs" data-time="300">5분</button>
                 </div>
+                <div class="flex items-center gap-1">
+                    <button id="btnTimerStart" class="px-2 py-0.5 bg-green-600 text-white font-bold rounded text-xs">시작</button>
+                    <button id="btnTimerPause" class="px-2 py-0.5 bg-yellow-500 text-white font-bold rounded text-xs hidden">정지</button>
+                    <button id="btnTimerReset" class="px-2 py-0.5 bg-gray-400 text-white font-bold rounded text-xs">리셋</button>
+                </div>
+                <select id="timerMode" class="px-1 py-0.5 border border-gray-300 rounded text-xs bg-white">
+                    <option value="global">전체</option>
+                    <option value="perGroup">모둠별</option>
+                </select>
+                <button id="btnSettings" class="p-1 bg-gray-200 hover:bg-gray-300 rounded text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
             </div>
-        </header>
-
-        <!-- 타이머 설정 섹션 -->
-        <section class="bg-white rounded-xl shadow-sm p-3 mb-4">
-            <div class="flex flex-col items-center gap-2">
-                <!-- 타이머 모드 선택 -->
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-gray-500">⏱️</span>
-                    <select id="timerMode" class="px-2 py-1 border border-gray-300 rounded text-xs bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="global">전체 타이머</option>
-                        <option value="perGroup">모둠별 타이머</option>
-                    </select>
+            <!-- 모둠별 타이머 (숨김) -->
+            <div id="perGroupTimerSection" class="hidden flex items-center justify-center gap-2 flex-wrap">
+                <div class="flex items-center gap-1">
+                    <button class="timer-preset px-2 py-0.5 bg-gray-200 hover:bg-gray-300 rounded text-xs" data-time="60">1분</button>
+                    <button class="timer-preset px-2 py-0.5 bg-gray-200 hover:bg-gray-300 rounded text-xs" data-time="180">3분</button>
+                    <button class="timer-preset px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-xs" data-time="300">5분</button>
                 </div>
-                <!-- 전체 타이머일 때만 표시 -->
-                <div id="globalTimerSection" class="flex flex-col items-center gap-2 w-full">
-                    <div class="text-5xl font-mono font-bold text-gray-800 text-center" id="timerDisplay">05:00</div>
-                    <div class="flex items-center justify-center gap-1 flex-wrap">
-                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="60">1분</button>
-                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="180">3분</button>
-                        <button class="timer-preset px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-xs transition" data-time="300">5분</button>
-                        <input type="number" id="customTime" placeholder="초" min="10" max="3600"
-                               class="w-12 px-1 py-1 border border-gray-300 rounded text-center text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button id="btnTimerStart" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white font-bold rounded shadow-sm transition text-xs">
-                            시작
-                        </button>
-                        <button id="btnTimerPause" class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold rounded shadow-sm transition text-xs hidden">
-                            일시정지
-                        </button>
-                        <button id="btnTimerReset" class="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded shadow-sm transition text-xs">
-                            리셋
-                        </button>
-                    </div>
-                </div>
-                <!-- 모둠별 타이머일 때만 표시 -->
-                <div id="perGroupTimerSection" class="hidden flex flex-col items-center gap-2 w-full">
-                    <div class="flex items-center justify-center gap-1 flex-wrap">
-                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="60">1분</button>
-                        <button class="timer-preset px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded text-xs transition" data-time="180">3분</button>
-                        <button class="timer-preset px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded text-xs transition" data-time="300">5분</button>
-                    </div>
-                    <span class="text-gray-500 text-xs">각 모둠 카드에서 타이머 조작</span>
-                    <div class="flex items-center gap-2">
-                        <button id="btnStartAllTimers" class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white font-bold rounded shadow-sm transition text-xs">
-                            전체 시작
-                        </button>
-                        <button id="btnResetAllTimers" class="px-3 py-1 bg-gray-500 hover:bg-gray-600 text-white font-bold rounded shadow-sm transition text-xs">
-                            전체 리셋
-                        </button>
-                    </div>
-                </div>
+                <button id="btnStartAllTimers" class="px-2 py-0.5 bg-green-600 text-white font-bold rounded text-xs">전체시작</button>
+                <button id="btnResetAllTimers" class="px-2 py-0.5 bg-gray-400 text-white font-bold rounded text-xs">전체리셋</button>
+                <select id="timerMode2" class="px-1 py-0.5 border border-gray-300 rounded text-xs bg-white">
+                    <option value="global">전체</option>
+                    <option value="perGroup" selected>모둠별</option>
+                </select>
+                <button id="btnSettings2" class="p-1 bg-gray-200 hover:bg-gray-300 rounded text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </button>
             </div>
+            <!-- 숨겨진 요소들 (기존 기능 유지) -->
+            <input type="number" id="customTime" class="hidden" min="10" max="3600">
         </section>
 
         <!-- 모둠 설정 -->
@@ -225,18 +201,31 @@
 
     <!-- 설정 모달 -->
     <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4">
-            <div class="p-6 border-b border-gray-200">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 max-h-[90vh] overflow-hidden">
+            <div class="p-4 border-b border-gray-200">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-xl font-bold text-gray-800">⚙️ 설정</h2>
+                    <h2 class="text-lg font-bold text-gray-800">⚙️ 설정</h2>
                     <button id="btnCloseSettings" class="p-2 hover:bg-gray-100 rounded-lg transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
             </div>
-            <div class="p-6 space-y-6">
+            <div class="p-4 space-y-4 overflow-y-auto max-h-[70vh]">
+                <!-- 학급 관리 -->
+                <div class="bg-blue-50 rounded-lg p-3">
+                    <label class="block text-gray-700 font-medium mb-2">📚 학급 관리</label>
+                    <div class="flex gap-2">
+                        <select id="classSelect" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">학급을 선택하세요</option>
+                        </select>
+                        <button id="btnEditClass" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition">
+                            편집
+                        </button>
+                    </div>
+                </div>
+
                 <!-- 쿠키 모드 설정 -->
                 <div>
                     <label class="block text-gray-700 font-medium mb-3">🍪 칭찬 쿠키 모드</label>

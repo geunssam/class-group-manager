@@ -76,10 +76,19 @@ class App {
             }
         });
 
-        // 타이머 모드 전환
+        // 타이머 모드 전환 (두 개의 select 동기화)
         document.getElementById('timerMode').addEventListener('change', (e) => {
             this.setTimerMode(e.target.value);
+            const timerMode2 = document.getElementById('timerMode2');
+            if (timerMode2) timerMode2.value = e.target.value;
         });
+        const timerMode2 = document.getElementById('timerMode2');
+        if (timerMode2) {
+            timerMode2.addEventListener('change', (e) => {
+                this.setTimerMode(e.target.value);
+                document.getElementById('timerMode').value = e.target.value;
+            });
+        }
 
         // 모둠별 타이머 일괄 제어
         document.getElementById('btnStartAllTimers').addEventListener('click', () => this.startAllGroupTimers());
@@ -99,8 +108,10 @@ class App {
             }
         });
 
-        // 설정 모달
+        // 설정 모달 (두 개의 버튼)
         document.getElementById('btnSettings').addEventListener('click', () => this.openSettingsModal());
+        const btnSettings2 = document.getElementById('btnSettings2');
+        if (btnSettings2) btnSettings2.addEventListener('click', () => this.openSettingsModal());
         document.getElementById('btnCloseSettings').addEventListener('click', () => this.closeSettingsModal());
 
         // 설정 변경
@@ -500,32 +511,31 @@ class App {
         const container = document.getElementById('groupsContainer');
         container.innerHTML = '';
 
-        // 최대 인원수 계산
-        const maxMembers = Math.max(...this.currentGroups.map(g => g.members.length));
-
         // 카드 하나씩 순차적으로 표시
         for (let idx = 0; idx < this.currentGroups.length; idx++) {
             const group = this.currentGroups[idx];
             const timerHtml = this.timerMode === 'perGroup' ? this.renderGroupTimer(group.id) : '';
+            const memberCount = group.members.length;
+            const gridClass = memberCount === 1 ? 'flex justify-center' : 'grid grid-cols-2 gap-1';
 
             const cardHtml = `
-                <div class="group-card bg-white rounded-xl shadow-sm p-4 group-color-${(idx % 8) + 1} flex flex-col h-full card-reveal" style="animation-delay: ${idx * 0.1}s">
+                <div class="group-card bg-white rounded-xl shadow-sm p-3 group-color-${(idx % 8) + 1} flex flex-col card-reveal" style="animation-delay: ${idx * 0.1}s">
                     <div class="flex items-center justify-between mb-2">
-                        <h3 class="text-lg font-bold text-gray-800">${group.id}모둠</h3>
-                        <span class="text-sm text-gray-500">${group.members.length}명</span>
+                        <h3 class="text-base font-bold text-gray-800">${group.id}모둠</h3>
+                        <span class="text-xs text-gray-500">${memberCount}명</span>
                     </div>
                     ${timerHtml}
-                    <div class="flex-1 min-h-[${maxMembers * 28}px]" id="group-members-${group.id}">
+                    <div class="flex-1 ${gridClass}" id="group-members-${group.id}">
                     </div>
                     <div class="flex items-center justify-between pt-2 border-t border-gray-100 mt-2">
-                        <div class="flex items-center gap-2">
-                            <span class="text-xl">🍪</span>
-                            <span class="text-lg font-bold text-gray-800 cookie-count" data-group="${group.id}">${group.cookies}</span>
+                        <div class="flex items-center gap-1">
+                            <span class="text-sm">🍪</span>
+                            <span class="text-sm font-bold text-gray-800 cookie-count" data-group="${group.id}">${group.cookies}</span>
                         </div>
                         <div class="flex gap-1">
-                            <button class="cookie-btn bg-green-100 hover:bg-green-200 text-green-700 rounded-lg"
+                            <button class="cookie-btn w-6 h-6 bg-green-100 hover:bg-green-200 text-green-700 rounded text-xs"
                                     onclick="app.addCookie(${group.id})">+</button>
-                            <button class="cookie-btn bg-red-100 hover:bg-red-200 text-red-700 rounded-lg"
+                            <button class="cookie-btn w-6 h-6 bg-red-100 hover:bg-red-200 text-red-700 rounded text-xs"
                                     onclick="app.removeCookie(${group.id})">-</button>
                         </div>
                     </div>
@@ -540,7 +550,7 @@ class App {
             for (let mIdx = 0; mIdx < group.members.length; mIdx++) {
                 const name = group.members[mIdx];
                 membersContainer.insertAdjacentHTML('beforeend', `
-                    <div class="student-name text-gray-700 py-0.5 name-reveal" style="animation-delay: ${mIdx * 0.1}s">${name}</div>
+                    <div class="student-tag bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs text-center truncate name-reveal" style="animation-delay: ${mIdx * 0.1}s">${name}</div>
                 `);
                 await this.sleep(80);
             }
@@ -625,33 +635,32 @@ class App {
             });
         }
 
-        // 최대 인원수 계산 (카드 높이 통일용)
-        const maxMembers = Math.max(...this.currentGroups.map(g => g.members.length));
-
         container.innerHTML = this.currentGroups.map((group, idx) => {
             const timerHtml = this.timerMode === 'perGroup' ? this.renderGroupTimer(group.id) : '';
+            const memberCount = group.members.length;
+            const gridClass = memberCount === 1 ? 'flex justify-center' : 'grid grid-cols-2 gap-1';
 
             return `
-            <div class="group-card bg-white rounded-xl shadow-sm p-4 group-color-${(idx % 8) + 1} flex flex-col h-full">
+            <div class="group-card bg-white rounded-xl shadow-sm p-3 group-color-${(idx % 8) + 1} flex flex-col">
                 <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-lg font-bold text-gray-800">${group.id}모둠</h3>
-                    <span class="text-sm text-gray-500">${group.members.length}명</span>
+                    <h3 class="text-base font-bold text-gray-800">${group.id}모둠</h3>
+                    <span class="text-xs text-gray-500">${memberCount}명</span>
                 </div>
                 ${timerHtml}
-                <div class="flex-1 min-h-[${maxMembers * 28}px]">
+                <div class="flex-1 ${gridClass}">
                     ${group.members.map(name => `
-                        <div class="student-name text-gray-700 py-0.5">${name}</div>
+                        <div class="student-tag bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs text-center truncate">${name}</div>
                     `).join('')}
                 </div>
                 <div class="flex items-center justify-between pt-2 border-t border-gray-100 mt-2">
-                    <div class="flex items-center gap-2">
-                        <span class="text-xl">🍪</span>
-                        <span class="text-lg font-bold text-gray-800 cookie-count" data-group="${group.id}">${group.cookies}</span>
+                    <div class="flex items-center gap-1">
+                        <span class="text-sm">🍪</span>
+                        <span class="text-sm font-bold text-gray-800 cookie-count" data-group="${group.id}">${group.cookies}</span>
                     </div>
                     <div class="flex gap-1">
-                        <button class="cookie-btn bg-green-100 hover:bg-green-200 text-green-700 rounded-lg"
+                        <button class="cookie-btn w-6 h-6 bg-green-100 hover:bg-green-200 text-green-700 rounded text-xs"
                                 onclick="app.addCookie(${group.id})">+</button>
-                        <button class="cookie-btn bg-red-100 hover:bg-red-200 text-red-700 rounded-lg"
+                        <button class="cookie-btn w-6 h-6 bg-red-100 hover:bg-red-200 text-red-700 rounded text-xs"
                                 onclick="app.removeCookie(${group.id})">-</button>
                     </div>
                 </div>
