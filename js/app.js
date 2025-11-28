@@ -37,6 +37,7 @@ class App {
 
         // 모둠 뽑기
         document.getElementById('btnPick').addEventListener('click', () => this.pickGroups());
+        document.getElementById('btnReset').addEventListener('click', () => this.resetGroups());
 
         // 학급 편집 모달
         document.getElementById('btnEditClass').addEventListener('click', () => this.openClassModal());
@@ -179,7 +180,10 @@ class App {
     }
 
     updateStudentInfo() {
+        // 학생 정보 표시 요소가 없으면 무시
         const info = document.getElementById('studentInfo');
+        if (!info) return;
+
         if (!this.currentClassId) {
             info.textContent = '학급을 선택하면 학생 수가 표시됩니다';
             return;
@@ -560,7 +564,7 @@ class App {
             for (let mIdx = 0; mIdx < group.members.length; mIdx++) {
                 const name = group.members[mIdx];
                 membersContainer.insertAdjacentHTML('beforeend', `
-                    <div class="student-tag bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs text-center truncate name-reveal" style="animation-delay: ${mIdx * 0.1}s">${name}</div>
+                    <div class="student-tag bg-sky-100 text-sky-800 px-2 py-1 rounded-xl text-xs text-center truncate name-reveal" style="animation-delay: ${mIdx * 0.1}s">${name}</div>
                 `);
                 await this.sleep(80);
             }
@@ -619,6 +623,20 @@ class App {
         this.showToast('별도 모둠이 생성되었습니다');
     }
 
+    resetGroups() {
+        if (this.currentGroups.length === 0) {
+            this.showToast('초기화할 모둠이 없습니다');
+            return;
+        }
+
+        this.currentGroups = [];
+        this.remainingStudents = [];
+        this.groupTimers = {};
+        store.saveCurrentGroups(this.currentGroups);
+        this.renderGroups();
+        this.showToast('모둠이 초기화되었습니다');
+    }
+
     renderGroups() {
         const container = document.getElementById('groupsContainer');
 
@@ -659,7 +677,7 @@ class App {
                 ${timerHtml}
                 <div class="flex-1 ${gridClass}">
                     ${group.members.map(name => `
-                        <div class="student-tag bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs text-center truncate">${name}</div>
+                        <div class="student-tag bg-sky-100 text-sky-800 px-2 py-1 rounded-xl text-xs text-center truncate">${name}</div>
                     `).join('')}
                 </div>
                 <div class="flex items-center justify-between pt-2 border-t border-gray-100 mt-2">
