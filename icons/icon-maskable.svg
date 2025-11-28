@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="diceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e5e7eb;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Full background for maskable -->
+  <rect x="0" y="0" width="512" height="512" fill="url(#bgGrad)"/>
+
+  <!-- Dice - centered for safe zone (80% = 410px, offset = 51px) -->
+  <g transform="translate(156, 130)">
+    <!-- Dice body -->
+    <rect x="0" y="0" width="200" height="200" rx="24" ry="24" fill="url(#diceGrad)" stroke="#d1d5db" stroke-width="2"/>
+
+    <!-- Dice dots (showing 6) -->
+    <!-- Left column -->
+    <circle cx="50" cy="50" r="18" fill="#1f2937"/>
+    <circle cx="50" cy="100" r="18" fill="#1f2937"/>
+    <circle cx="50" cy="150" r="18" fill="#1f2937"/>
+
+    <!-- Right column -->
+    <circle cx="150" cy="50" r="18" fill="#1f2937"/>
+    <circle cx="150" cy="100" r="18" fill="#1f2937"/>
+    <circle cx="150" cy="150" r="18" fill="#1f2937"/>
+  </g>
+
+  <!-- Group of people icons at bottom - scaled for safe zone -->
+  <g transform="translate(136, 355)">
+    <!-- Person 1 -->
+    <circle cx="40" cy="24" r="20" fill="#fbbf24"/>
+    <path d="M20,72 Q20,48 40,48 Q60,48 60,72" fill="#fbbf24"/>
+
+    <!-- Person 2 -->
+    <circle cx="120" cy="24" r="20" fill="#34d399"/>
+    <path d="M100,72 Q100,48 120,48 Q140,48 140,72" fill="#34d399"/>
+
+    <!-- Person 3 -->
+    <circle cx="200" cy="24" r="20" fill="#f87171"/>
+    <path d="M180,72 Q180,48 200,48 Q220,48 220,72" fill="#f87171"/>
+  </g>
+</svg>

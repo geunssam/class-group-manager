@@ -1,0 +1,29 @@
+{
+  "name": "모둠 뽑기 - Class Group Manager",
+  "short_name": "모둠 뽑기",
+  "description": "학급 모둠을 쉽고 재미있게 구성하는 앱",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f3f4f6",
+  "theme_color": "#3b82f6",
+  "lang": "ko",
+  "scope": "./",
+  "id": "class-group-manager",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "utilities"],
+  "prefer_related_applications": false
+}
