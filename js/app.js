@@ -39,6 +39,42 @@ class App {
         document.getElementById('btnPick').addEventListener('click', () => this.pickGroups());
         document.getElementById('btnReset').addEventListener('click', () => this.resetGroups());
 
+        // 모둠 인원/개수 증감 버튼
+        const groupSizeInput = document.getElementById('groupSize');
+        const groupCountInput = document.getElementById('groupCount');
+
+        document.getElementById('btnGroupSizeMinus').addEventListener('click', (e) => {
+            e.preventDefault();
+            const val = parseInt(groupSizeInput.value) - 1;
+            if (val >= parseInt(groupSizeInput.min)) {
+                groupSizeInput.value = val;
+            }
+        });
+
+        document.getElementById('btnGroupSizePlus').addEventListener('click', (e) => {
+            e.preventDefault();
+            const val = parseInt(groupSizeInput.value) + 1;
+            if (val <= parseInt(groupSizeInput.max)) {
+                groupSizeInput.value = val;
+            }
+        });
+
+        document.getElementById('btnGroupCountMinus').addEventListener('click', (e) => {
+            e.preventDefault();
+            const val = parseInt(groupCountInput.value) - 1;
+            if (val >= parseInt(groupCountInput.min)) {
+                groupCountInput.value = val;
+            }
+        });
+
+        document.getElementById('btnGroupCountPlus').addEventListener('click', (e) => {
+            e.preventDefault();
+            const val = parseInt(groupCountInput.value) + 1;
+            if (val <= parseInt(groupCountInput.max)) {
+                groupCountInput.value = val;
+            }
+        });
+
         // 학급 편집 모달
         document.getElementById('btnEditClass').addEventListener('click', () => this.openClassModal());
         document.getElementById('btnCloseModal').addEventListener('click', () => this.closeClassModal());
@@ -1185,49 +1221,3 @@ class App {
 
 // 앱 초기화
 const app = new App();
-
-// 입력 변경 시 학생 정보 업데이트
-document.getElementById('groupSize').addEventListener('change', () => app.updateStudentInfo());
-document.getElementById('groupCount').addEventListener('change', () => app.updateStudentInfo());
-
-// +/- 버튼 이벤트 (DOM 로드 후 바인딩)
-document.addEventListener('DOMContentLoaded', () => {
-    const groupSizeInput = document.getElementById('groupSize');
-    const groupCountInput = document.getElementById('groupCount');
-
-    document.getElementById('btnGroupSizeMinus').addEventListener('click', (e) => {
-        e.preventDefault();
-        const val = parseInt(groupSizeInput.value) - 1;
-        if (val >= parseInt(groupSizeInput.min)) {
-            groupSizeInput.value = val;
-            app.updateStudentInfo();
-        }
-    });
-
-    document.getElementById('btnGroupSizePlus').addEventListener('click', (e) => {
-        e.preventDefault();
-        const val = parseInt(groupSizeInput.value) + 1;
-        if (val <= parseInt(groupSizeInput.max)) {
-            groupSizeInput.value = val;
-            app.updateStudentInfo();
-        }
-    });
-
-    document.getElementById('btnGroupCountMinus').addEventListener('click', (e) => {
-        e.preventDefault();
-        const val = parseInt(groupCountInput.value) - 1;
-        if (val >= parseInt(groupCountInput.min)) {
-            groupCountInput.value = val;
-            app.updateStudentInfo();
-        }
-    });
-
-    document.getElementById('btnGroupCountPlus').addEventListener('click', (e) => {
-        e.preventDefault();
-        const val = parseInt(groupCountInput.value) + 1;
-        if (val <= parseInt(groupCountInput.max)) {
-            groupCountInput.value = val;
-            app.updateStudentInfo();
-        }
-    });
-});
