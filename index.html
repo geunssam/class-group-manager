@@ -97,7 +97,8 @@
 
         <!-- 모둠 뽑기 섹션 -->
         <section class="bg-white rounded-xl shadow-sm p-3 mb-3">
-            <div class="flex items-center justify-center gap-2 flex-wrap">
+            <!-- 인원/모둠 선택 -->
+            <div class="flex items-center justify-center gap-3 mb-2">
                 <div class="flex items-center gap-1">
                     <button id="btnGroupSizeMinus" class="w-6 h-6 bg-blue-50 hover:bg-blue-100 rounded text-blue-500 font-bold text-sm">−</button>
                     <input type="number" id="groupSize" value="4" min="2" max="10"
@@ -112,6 +113,9 @@
                     <button id="btnGroupCountPlus" class="w-6 h-6 bg-blue-50 hover:bg-blue-100 rounded text-blue-500 font-bold text-sm">+</button>
                     <span class="text-gray-600 text-sm">모둠</span>
                 </div>
+            </div>
+            <!-- 액션 버튼들 -->
+            <div class="flex items-center justify-center gap-2">
                 <button id="btnExclude" class="px-3 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 font-medium rounded-lg transition text-sm hidden">
                     🚫 결석 <span id="excludeCount" class="font-bold"></span>
                 </button>
