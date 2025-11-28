@@ -119,6 +119,19 @@
                     ↺ 초기화
                 </button>
             </div>
+            <!-- 학생 제외 토글 -->
+            <div id="excludeSection" class="hidden mt-3 pt-3 border-t border-gray-100">
+                <div class="flex items-center justify-between mb-2">
+                    <button id="btnToggleExclude" class="text-sm text-gray-600 hover:text-blue-600 flex items-center gap-1">
+                        <span id="excludeArrow">▶</span> 결석/조퇴 학생 제외
+                        <span id="excludeCount" class="text-xs text-gray-400 ml-1"></span>
+                    </button>
+                    <button id="btnSelectAll" class="text-xs text-blue-500 hover:text-blue-700 hidden">전체선택</button>
+                </div>
+                <div id="studentCheckList" class="hidden grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-1 max-h-32 overflow-y-auto">
+                    <!-- 학생 체크박스가 여기에 동적으로 생성됨 -->
+                </div>
+            </div>
         </section>
 
         <!-- 모둠 카드들 -->
@@ -143,13 +156,9 @@
             <div class="p-6 overflow-y-auto max-h-[60vh]">
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium mb-2">학급 이름</label>
-                    <div class="flex gap-2">
-                        <input type="text" id="className" placeholder="예: 6학년 3반"
-                               class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <button id="btnAddClass" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                            추가
-                        </button>
-                    </div>
+                    <input type="text" id="className" placeholder="예: 6학년 3반"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <p class="text-xs text-gray-500 mt-1">💡 새 학급명 입력 후 저장하면 새 학급이 생성됩니다</p>
                 </div>
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium mb-2">저장된 학급</label>

@@ -6,6 +6,7 @@ class App {
         this.currentClassId = null;
         this.currentGroups = [];
         this.remainingStudents = [];
+        this.excludedStudents = []; // 이번 뽑기에서 제외할 학생
 
         // 전체 타이머
         this.timerSeconds = 300;
@@ -32,7 +33,8 @@ class App {
         // 학급 선택
         document.getElementById('classSelect').addEventListener('change', (e) => {
             this.currentClassId = e.target.value;
-            this.updateStudentInfo();
+            this.excludedStudents = []; // 학급 변경 시 제외 목록 초기화
+            this.renderExcludeSection();
         });
 
         // 모둠 뽑기
@@ -78,9 +80,12 @@ class App {
         // 학급 편집 모달
         document.getElementById('btnEditClass').addEventListener('click', () => this.openClassModal());
         document.getElementById('btnCloseModal').addEventListener('click', () => this.closeClassModal());
-        document.getElementById('btnAddClass').addEventListener('click', () => this.addNewClass());
-        document.getElementById('btnSaveClass').addEventListener('click', () => this.saveCurrentClass());
+        document.getElementById('btnSaveClass').addEventListener('click', () => this.saveClass());
         document.getElementById('btnDeleteClass').addEventListener('click', () => this.deleteCurrentClass());
+
+        // 학생 제외 기능
+        document.getElementById('btnToggleExclude').addEventListener('click', () => this.toggleExcludeList());
+        document.getElementById('btnSelectAll').addEventListener('click', () => this.selectAllStudents());
 
         // CSV 파일 가져오기
         document.getElementById('csvFileInput').addEventListener('change', (e) => this.importCSV(e));
@@ -294,7 +299,7 @@ class App {
         }
     }
 
-    addNewClass() {
+    saveClass() {
         const name = document.getElementById('className').value.trim();
         if (!name) {
             this.showToast('학급 이름을 입력해주세요');
@@ -304,39 +309,34 @@ class App {
         const studentsText = document.getElementById('studentList').value;
         const students = this.parseStudents(studentsText);
 
-        const newClass = store.addClass(name, students);
-        this.currentClassId = newClass.id;
+        if (this.currentClassId) {
+            // 기존 학급 수정
+            const currentClass = store.getClassById(this.currentClassId);
+            if (currentClass && currentClass.name !== name) {
+                // 이름이 변경된 경우 - 새 학급으로 저장할지 확인
+                const existingClass = store.getClasses().find(c => c.name === name && c.id !== this.currentClassId);
+                if (existingClass) {
+                    this.showToast('같은 이름의 학급이 이미 있습니다');
+                    return;
+                }
+            }
+            store.updateClass(this.currentClassId, name, students);
+            this.showToast('저장되었습니다');
+        } else {
+            // 새 학급 생성
+            const existingClass = store.getClasses().find(c => c.name === name);
+            if (existingClass) {
+                this.showToast('같은 이름의 학급이 이미 있습니다');
+                return;
+            }
+            const newClass = store.addClass(name, students);
+            this.currentClassId = newClass.id;
+            this.showToast(`'${name}' 학급이 추가되었습니다`);
+        }
 
         this.loadClasses();
         this.renderClassList();
-        this.updateStudentInfo();
-        this.showToast(`'${name}' 학급이 추가되었습니다`);
-
-        // 입력 필드 초기화
-        document.getElementById('className').value = '';
-        document.getElementById('studentList').value = '';
-    }
-
-    saveCurrentClass() {
-        if (!this.currentClassId) {
-            this.showToast('먼저 학급을 선택해주세요');
-            return;
-        }
-
-        const name = document.getElementById('className').value.trim();
-        if (!name) {
-            this.showToast('학급 이름을 입력해주세요');
-            return;
-        }
-
-        const studentsText = document.getElementById('studentList').value;
-        const students = this.parseStudents(studentsText);
-
-        store.updateClass(this.currentClassId, name, students);
-        this.loadClasses();
-        this.renderClassList();
-        this.updateStudentInfo();
-        this.showToast('저장되었습니다');
+        this.renderExcludeSection();
     }
 
     deleteCurrentClass() {
@@ -348,9 +348,10 @@ class App {
         if (confirm('정말 이 학급을 삭제하시겠습니까?')) {
             store.deleteClass(this.currentClassId);
             this.currentClassId = null;
+            this.excludedStudents = [];
             this.loadClasses();
             this.renderClassList();
-            this.updateStudentInfo();
+            this.renderExcludeSection();
 
             document.getElementById('className').value = '';
             document.getElementById('studentList').value = '';
@@ -452,6 +453,114 @@ class App {
         return names;
     }
 
+    // === 학생 제외 기능 ===
+
+    renderExcludeSection() {
+        const excludeSection = document.getElementById('excludeSection');
+        const studentCheckList = document.getElementById('studentCheckList');
+        const excludeCount = document.getElementById('excludeCount');
+
+        if (!this.currentClassId) {
+            excludeSection.classList.add('hidden');
+            return;
+        }
+
+        const cls = store.getClassById(this.currentClassId);
+        if (!cls || cls.students.length === 0) {
+            excludeSection.classList.add('hidden');
+            return;
+        }
+
+        excludeSection.classList.remove('hidden');
+
+        // 학생 체크박스 렌더링
+        studentCheckList.innerHTML = cls.students.map(name => {
+            const isExcluded = this.excludedStudents.includes(name);
+            return `
+                <label class="flex items-center gap-1 p-1 rounded cursor-pointer hover:bg-gray-50 ${isExcluded ? 'opacity-50' : ''}">
+                    <input type="checkbox" class="student-checkbox w-3 h-3" data-name="${name}" ${isExcluded ? '' : 'checked'}>
+                    <span class="text-xs truncate">${name}</span>
+                </label>
+            `;
+        }).join('');
+
+        // 체크박스 이벤트 바인딩
+        studentCheckList.querySelectorAll('.student-checkbox').forEach(cb => {
+            cb.addEventListener('change', (e) => {
+                const name = e.target.dataset.name;
+                if (e.target.checked) {
+                    this.excludedStudents = this.excludedStudents.filter(n => n !== name);
+                    e.target.parentElement.classList.remove('opacity-50');
+                } else {
+                    if (!this.excludedStudents.includes(name)) {
+                        this.excludedStudents.push(name);
+                    }
+                    e.target.parentElement.classList.add('opacity-50');
+                }
+                this.updateExcludeCount();
+            });
+        });
+
+        this.updateExcludeCount();
+    }
+
+    updateExcludeCount() {
+        const excludeCount = document.getElementById('excludeCount');
+        const cls = store.getClassById(this.currentClassId);
+        if (cls) {
+            const participating = cls.students.length - this.excludedStudents.length;
+            if (this.excludedStudents.length > 0) {
+                excludeCount.textContent = `(${participating}명 참여, ${this.excludedStudents.length}명 제외)`;
+                excludeCount.classList.remove('text-gray-400');
+                excludeCount.classList.add('text-red-500');
+            } else {
+                excludeCount.textContent = `(${participating}명)`;
+                excludeCount.classList.remove('text-red-500');
+                excludeCount.classList.add('text-gray-400');
+            }
+        }
+    }
+
+    toggleExcludeList() {
+        const studentCheckList = document.getElementById('studentCheckList');
+        const excludeArrow = document.getElementById('excludeArrow');
+        const btnSelectAll = document.getElementById('btnSelectAll');
+
+        if (studentCheckList.classList.contains('hidden')) {
+            studentCheckList.classList.remove('hidden');
+            btnSelectAll.classList.remove('hidden');
+            excludeArrow.textContent = '▼';
+        } else {
+            studentCheckList.classList.add('hidden');
+            btnSelectAll.classList.add('hidden');
+            excludeArrow.textContent = '▶';
+        }
+    }
+
+    selectAllStudents() {
+        const checkboxes = document.querySelectorAll('.student-checkbox');
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+        checkboxes.forEach(cb => {
+            cb.checked = !allChecked;
+            const name = cb.dataset.name;
+            if (!allChecked) {
+                // 전체 선택
+                this.excludedStudents = this.excludedStudents.filter(n => n !== name);
+                cb.parentElement.classList.remove('opacity-50');
+            } else {
+                // 전체 해제
+                if (!this.excludedStudents.includes(name)) {
+                    this.excludedStudents.push(name);
+                }
+                cb.parentElement.classList.add('opacity-50');
+            }
+        });
+
+        document.getElementById('btnSelectAll').textContent = allChecked ? '전체선택' : '전체해제';
+        this.updateExcludeCount();
+    }
+
     // === 모둠 뽑기 ===
 
     async pickGroups() {
@@ -466,16 +575,23 @@ class App {
             return;
         }
 
+        // 제외된 학생 필터링
+        const activeStudents = cls.students.filter(s => !this.excludedStudents.includes(s));
+        if (activeStudents.length === 0) {
+            this.showToast('참여 학생이 없습니다');
+            return;
+        }
+
         const groupSize = parseInt(document.getElementById('groupSize').value);
         const groupCount = parseInt(document.getElementById('groupCount').value);
 
         const settings = store.getSettings();
 
-        // 애니메이션 활성화 시
+        // 애니메이션 활성화 시 (제외된 학생 제외한 activeStudents 사용)
         if (settings.animationEnabled !== false) {
-            await this.pickGroupsWithAnimation(cls.students, groupSize, groupCount);
+            await this.pickGroupsWithAnimation(activeStudents, groupSize, groupCount);
         } else {
-            this.pickGroupsInstant(cls.students, groupSize, groupCount);
+            this.pickGroupsInstant(activeStudents, groupSize, groupCount);
         }
     }
 
