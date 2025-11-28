@@ -76,17 +76,27 @@ class App {
             }
         });
 
-        // 타이머 모드 전환 (두 개의 select 동기화)
+        // 타이머 모드 전환 (select 및 탭 버튼)
         document.getElementById('timerMode').addEventListener('change', (e) => {
             this.setTimerMode(e.target.value);
-            const timerMode2 = document.getElementById('timerMode2');
-            if (timerMode2) timerMode2.value = e.target.value;
+            this.updateTimerTabs(e.target.value);
         });
-        const timerMode2 = document.getElementById('timerMode2');
-        if (timerMode2) {
-            timerMode2.addEventListener('change', (e) => {
-                this.setTimerMode(e.target.value);
-                document.getElementById('timerMode').value = e.target.value;
+
+        // 탭 버튼 이벤트
+        const tabGlobal = document.getElementById('tabGlobalTimer');
+        const tabPerGroup = document.getElementById('tabPerGroupTimer');
+        if (tabGlobal) {
+            tabGlobal.addEventListener('click', () => {
+                this.setTimerMode('global');
+                document.getElementById('timerMode').value = 'global';
+                this.updateTimerTabs('global');
+            });
+        }
+        if (tabPerGroup) {
+            tabPerGroup.addEventListener('click', () => {
+                this.setTimerMode('perGroup');
+                document.getElementById('timerMode').value = 'perGroup';
+                this.updateTimerTabs('perGroup');
             });
         }
 
@@ -753,6 +763,25 @@ class App {
 
         // 모둠 카드 다시 렌더링 (타이머 포함/미포함)
         this.renderGroups();
+    }
+
+    updateTimerTabs(mode) {
+        const tabGlobal = document.getElementById('tabGlobalTimer');
+        const tabPerGroup = document.getElementById('tabPerGroupTimer');
+
+        if (!tabGlobal || !tabPerGroup) return;
+
+        if (mode === 'global') {
+            tabGlobal.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+            tabGlobal.classList.remove('text-gray-500');
+            tabPerGroup.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+            tabPerGroup.classList.add('text-gray-500');
+        } else {
+            tabPerGroup.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
+            tabPerGroup.classList.remove('text-gray-500');
+            tabGlobal.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
+            tabGlobal.classList.add('text-gray-500');
+        }
     }
 
     setTimerPreset(seconds, button) {
